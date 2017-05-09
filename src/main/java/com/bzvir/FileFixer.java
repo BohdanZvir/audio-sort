@@ -15,8 +15,8 @@ import static java.lang.Character.UnicodeBlock.*;
  */
 public class FileFixer {
 
-    public static final String ISO_8859_1 = "ISO-8859-1";
-    public static final String WINDOWS_1251 = "WINDOWS-1251";
+    static final String ISO_8859_1 = "ISO-8859-1";
+    static final String WINDOWS_1251 = "WINDOWS-1251";
 
     public static String fixFileName(String fileName) throws InvalidDataException, IOException, UnsupportedTagException {
         Mp3File mp3file = new Mp3File(fileName);
@@ -31,29 +31,34 @@ public class FileFixer {
 
         String title = mp3file.getId3v1Tag().getTitle();
         title = fixCyrillicEncoding(title);
-
-        // WINDOWS-1251
-
         System.out.println("Has ID3v2 tag?: " + (mp3file.hasId3v2Tag() ? "YES" : "NO"));
         System.out.println("Has custom tag?: " + (mp3file.hasCustomTag() ? "YES" : "NO"));
         return artist + " - " + title + ".mp3";
     }
 
-    private static String fixCyrillicEncoding(String text) throws UnsupportedEncodingException {
-        if(of(text.charAt(0)).equals(BASIC_LATIN)) {
+    static String fixCyrillicEncoding(String text) throws UnsupportedEncodingException {
+        if(isLatinChars(text)) {
             return text;
         } else
-        if(of(text.charAt(0)).equals(CYRILLIC)) {
+        if(isCyrillicChars(text)) {
             return text;
         }
         else {
             String newStr = new String(text.getBytes(ISO_8859_1), WINDOWS_1251);
-            if(of(newStr.charAt(0)).equals(CYRILLIC)) {
+            if(isCyrillicChars(newStr)) {
                 return newStr;
             }
 
             throw new IllegalArgumentException("not supported");
         }
+    }
+
+    private static boolean isCyrillicChars(String text) {
+        return of(text.charAt(0)).equals(CYRILLIC);
+    }
+
+    private static boolean isLatinChars(String text) {
+        return of(text.charAt(0)).equals(BASIC_LATIN);
     }
 
     private static String detectEncoding(String text) throws UnsupportedEncodingException {
