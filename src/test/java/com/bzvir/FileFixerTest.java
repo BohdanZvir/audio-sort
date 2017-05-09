@@ -7,7 +7,6 @@ import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -27,15 +26,4 @@ public class FileFixerTest {
         assertThat(fileName, is("Руслана - Світанок.mp3"));
     }
 
-    @Test
-    public void fixCyrillicEncoding() throws UnsupportedEncodingException {
-//        PowerMockito.spy(FileFixer.class);git s
-//        PowerMockito.doReturn()
-        String win1251 = "Ðóñëàíà";
-        String utf8 = "Руслана";
-
-        String actual = FileFixer.fixCyrillicEncoding(win1251);
-
-        assertThat(actual, is(utf8));
-    }
 }

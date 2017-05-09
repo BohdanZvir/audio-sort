@@ -3,12 +3,8 @@ package com.bzvir;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.UnsupportedTagException;
-import org.mozilla.universalchardet.UniversalDetector;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
-import static java.lang.Character.UnicodeBlock.*;
 
 /**
  * Created by bohdan.
@@ -26,54 +22,14 @@ public class FileFixer {
         System.out.println("Has ID3v1 tag?: " + (mp3file.hasId3v1Tag() ? "YES" : "NO"));
         String artist = mp3file.getId3v1Tag().getArtist();
 
-        artist = fixCyrillicEncoding(artist);
-        String encoding = detectEncoding(artist);
+        artist = EncodingUtil.fixCyrillicEncoding(artist);
+        String encoding = EncodingUtil.detectEncoding(artist);
 
         String title = mp3file.getId3v1Tag().getTitle();
-        title = fixCyrillicEncoding(title);
+        title = EncodingUtil.fixCyrillicEncoding(title);
         System.out.println("Has ID3v2 tag?: " + (mp3file.hasId3v2Tag() ? "YES" : "NO"));
         System.out.println("Has custom tag?: " + (mp3file.hasCustomTag() ? "YES" : "NO"));
         return artist + " - " + title + ".mp3";
-    }
-
-    static String fixCyrillicEncoding(String text) throws UnsupportedEncodingException {
-        if(isLatinChars(text)) {
-            return text;
-        } else
-        if(isCyrillicChars(text)) {
-            return text;
-        }
-        else {
-            String newStr = new String(text.getBytes(ISO_8859_1), WINDOWS_1251);
-            if(isCyrillicChars(newStr)) {
-                return newStr;
-            }
-
-            throw new IllegalArgumentException("not supported");
-        }
-    }
-
-    private static boolean isCyrillicChars(String text) {
-        return of(text.charAt(0)).equals(CYRILLIC);
-    }
-
-    private static boolean isLatinChars(String text) {
-        return of(text.charAt(0)).equals(BASIC_LATIN);
-    }
-
-    private static String detectEncoding(String text) throws UnsupportedEncodingException {
-        UniversalDetector detector = new UniversalDetector(null);
-// (2)
-        byte[] bytes = text.getBytes();
-        detector.handleData(bytes, 0, bytes.length);
-// (3)
-        detector.dataEnd();
-
-// (4)
-        String encoding = detector.getDetectedCharset();
-// (5)
-        detector.reset();
-        return encoding;
     }
 
 }
