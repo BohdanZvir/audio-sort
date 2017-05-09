@@ -5,6 +5,7 @@ import org.mozilla.universalchardet.UniversalDetector;
 import java.io.UnsupportedEncodingException;
 
 public class EncodingUtil {
+
     static String fixCyrillicEncoding(String text) throws UnsupportedEncodingException {
         if (isLatinChars(text)) {
             return text;
