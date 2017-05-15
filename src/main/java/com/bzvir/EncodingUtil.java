@@ -1,7 +1,5 @@
 package com.bzvir;
 
-import org.mozilla.universalchardet.UniversalDetector;
-
 import java.io.UnsupportedEncodingException;
 
 public class EncodingUtil {
@@ -29,18 +27,4 @@ public class EncodingUtil {
         return Character.UnicodeBlock.of(text.charAt(0)).equals(Character.UnicodeBlock.BASIC_LATIN);
     }
 
-    static String detectEncoding(String text) throws UnsupportedEncodingException {
-        UniversalDetector detector = new UniversalDetector(null);
-// (2)
-        byte[] bytes = text.getBytes();
-        detector.handleData(bytes, 0, bytes.length);
-// (3)
-        detector.dataEnd();
-
-// (4)
-        String encoding = detector.getDetectedCharset();
-// (5)
-        detector.reset();
-        return encoding;
-    }
 }

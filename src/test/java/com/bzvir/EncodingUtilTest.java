@@ -1,6 +1,5 @@
 package com.bzvir;
 
-import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 
 import java.io.UnsupportedEncodingException;
@@ -62,12 +61,5 @@ class EncodingUtilTest {
     void isNotLatinChars() {
         boolean isCyrillic = EncodingUtil.isLatinChars("Fранко");
         assertThat(isCyrillic, is(true));
-    }
-
-    @Test
-    @Ignore
-    void detectEncoding() throws UnsupportedEncodingException {
-        String encoding = EncodingUtil.detectEncoding("Ðóñëàíà");
-        System.out.println(encoding);
     }
 }
